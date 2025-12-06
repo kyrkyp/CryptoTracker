@@ -276,12 +276,30 @@ h1:focus {
     color: #6b7280;
 }
 
+.add-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    justify-content: flex-end;
+}
+
+.add-inline-input {
+    max-width: 6rem;
+}
+
+.btn-xs {
+    padding: 0.15rem 0.45rem;
+    font-size: 0.75rem;
+    border-radius: 999px;
+}
+
 .last-updated {
-    font-size: 0.80rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: #64748b;
     padding: 2px 8px;
-    border-radius: 6px;
+    border-radius: 999px;
     background: rgba(148, 163, 184, 0.15);
 }
+
 
