@@ -71,7 +71,12 @@
                                         </span>
                                     </td>
                                     <td>@e.Coin.Name</td>
-                                    <td class="text-end">@e.Quote.Price</td>
+                                    <td class="text-end">
+                                        <span class="@GetPriceChangeClass(e)">
+                                            @e.Quote.Price
+                                        </span>
+                                    </td>
+
                                     <td class="text-end">
                                         <span class="change-pill @(positive ? "change-up" : "change-down")">
                                             @e.Quote.Change24HPercent.ToString("0.##")%
@@ -139,6 +144,20 @@
     private decimal _editAmount;
     private decimal _editBuyPrice;
     private string? _inlineMessage;
+    
+    private readonly Dictionary<string, decimal> _lastPrices =
+        new(StringComparer.OrdinalIgnoreCase);
+
+    private readonly Dictionary<string, PriceChangeDirection> _priceDirections =
+        new(StringComparer.OrdinalIgnoreCase);
+
+    private enum PriceChangeDirection
+    {
+        None,
+        Up,
+        Down
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -160,7 +179,22 @@
             foreach (var coin in coins)
             {
                 var quote = await Crypto.Market.GetPriceAsync(coin.Symbol, "usd", ct);
+                
+                var direction = PriceChangeDirection.None;
+
+                if (_lastPrices.TryGetValue(coin.Symbol, out var lastPrice))
+                {
+                    const decimal epsilon = 0.0000001m;
+
+                    if (quote.Price > lastPrice + epsilon)
+                        direction = PriceChangeDirection.Up;
+                    else if (quote.Price < lastPrice - epsilon)
+                        direction = PriceChangeDirection.Down;
+                }
+
                 _entries.Add(new WatchEntry(coin, quote));
+                _priceDirections[coin.Symbol] = direction;
+                _lastPrices[coin.Symbol] = quote.Price;
             }
 
             _lastUpdated = DateTimeOffset.UtcNow;
@@ -171,6 +205,7 @@
             await InvokeAsync(StateHasChanged);
         }
     }
+
 
     private async Task RefreshLoopAsync(CancellationToken ct)
     {
@@ -188,6 +223,20 @@
             // ignore
         }
     }
+    
+    private string GetPriceChangeClass(WatchEntry entry)
+    {
+        if (!_priceDirections.TryGetValue(entry.Coin.Symbol, out var dir) ||
+            dir == PriceChangeDirection.None)
+        {
+            return "price-neutral";
+        }
+
+        return dir == PriceChangeDirection.Up
+            ? "price-up-anim"
+            : "price-down-anim";
+    }
+
 
     // ---------- Add to portfolio logic ----------
 
