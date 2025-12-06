@@ -1,5 +1,165 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@using CryptoTracker.sdk
+@using CryptoTracker.sdk.Models
+@inject CryptoTrackerClient Crypto
 
-Welcome to your new app.
+<PageTitle>Dashboard</PageTitle>
+
+<h2 class="mb-4">Dashboard</h2>
+
+@if (_isLoading)
+{
+    <p>Loading dashboard...</p>
+}
+else
+{
+    <div class="row">
+        <!-- Portfolio summary -->
+        <div class="col-12 col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Portfolio Summary</h4>
+
+                    @if (_portfolio is null || !_portfolio.Positions.Any())
+                    {
+                        <p class="text-muted mt-3">No holdings yet. Go to <strong>Portfolio</strong> to add your first position.</p>
+                    }
+                    else
+                    {
+                        <div class="mb-3">
+                            <p><strong>Total Current Value:</strong> @_portfolio.TotalCurrentValue:C</p>
+                            <p><strong>Total Invested:</strong> @_portfolio.TotalInvested:C</p>
+
+                            <p>
+                                <strong>Total PnL:</strong>
+                                <span class="@GetPnlClass(_portfolio.TotalPnL)">
+                                    @_portfolio.TotalPnL:C (@_portfolio.TotalPnLPercent.ToString("0.##")%)
+                                </span>
+                            </p>
+                        </div>
+
+                        <h6>Top Positions</h6>
+                        <table class="table table-sm align-middle">
+                            <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Amount</th>
+                                <th>Current Value</th>
+                                <th>PnL</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var pos in _portfolio.Positions
+                                .OrderByDescending(p => p.CurrentValue)
+                                .Take(5))
+                            {
+                                <tr>
+                                    <td>@pos.Holding.Symbol.ToUpperInvariant()</td>
+                                    <td>@pos.Holding.Amount</td>
+                                    <td>@pos.CurrentValue:C</td>
+                                    <td class="@GetPnlClass(pos.PnL)">
+                                        @pos.PnL:C (@pos.PnLPercent.ToString("0.##")%)
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+
+                        <a href="portfolio" class="btn btn-primary btn-sm mt-2">
+                            View full portfolio
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Watchlist preview -->
+        <div class="col-12 col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Watchlist Preview</h4>
+
+                    @if (_watchlist.Count == 0)
+                    {
+                        <p class="text-muted mt-3">No watchlist data available.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-sm align-middle">
+                            <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>24h %</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in _watchlist)
+                            {
+                                var positive = item.Quote.Change24HPercent >= 0;
+                                <tr>
+                                    <td>@item.Coin.Symbol.ToUpperInvariant()</td>
+                                    <td>@item.Coin.Name</td>
+                                    <td>@item.Quote.Price</td>
+                                    <td class="@(positive ? "text-success" : "text-danger")">
+                                        @item.Quote.Change24HPercent.ToString("0.##")%
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+
+                        <a href="watchlist" class="btn btn-outline-secondary btn-sm mt-2">
+                            Open full watchlist
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool _isLoading;
+    private PortfolioSnapshot? _portfolio;
+    private readonly List<WatchEntry> _watchlist = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+
+        try
+        {
+            // Φόρτωση portfolio
+            var portfolioTask = Crypto.Portfolio.GetSnapshotAsync();
+
+            // Φόρτωση top 5 coins για preview
+            var coins = await Crypto.Market.GetTopCoinsAsync(5);
+            _watchlist.Clear();
+
+            foreach (var coin in coins)
+            {
+                var quote = await Crypto.Market.GetPriceAsync(coin.Symbol, "usd");
+                _watchlist.Add(new WatchEntry(coin, quote));
+            }
+
+            _portfolio = await portfolioTask;
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private static string GetPnlClass(decimal pnl) =>
+        pnl switch
+        {
+            > 0 => "text-success",
+            < 0 => "text-danger",
+            _ => "text-muted"
+        };
+
+    private record WatchEntry(CoinInfo Coin, PriceQuote Quote);
+}
