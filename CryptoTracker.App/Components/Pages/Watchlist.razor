@@ -1,66 +1,102 @@
-﻿@page "/Watchlist"
+﻿@page "/watchlist"
 
 @using CryptoTracker.sdk
 @using CryptoTracker.sdk.Models
 @inject CryptoTrackerClient Crypto
-@implements  IAsyncDisposable
+@implements IAsyncDisposable
 
 <PageTitle>Watchlist</PageTitle>
 
-<h3>Crypto Watchlist</h3>
+<div class="page-container container-fluid">
+    <h2 class="page-title">Crypto Watchlist</h2>
 
-@if (_isLoading)
-{
-    <p>Loading prices...</p>
-}
-else if (_entries.Count == 0)
-{
-    <p>No data available.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Symbol</th>
-            <th>Name</th>
-            <th>Price (USD)</th>
-            <th>24h Change %</th>
-            <th>Last Updated</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var e in _entries)
-        {
-            var positive = e.Quote.Change24HPercent >= 0;
-            <tr>
-                <td>@e.Coin.Symbol.ToUpperInvariant()</td>
-                <td>@e.Coin.Name</td>
-                <td>@e.Quote.Price</td>
-                <td style="color:@(positive ? "green" : "red")">
-                    @e.Quote.Change24HPercent.ToString("0.##")%
-                </td>
-                <td>@e.Quote.Timestamp.LocalDateTime.ToLongTimeString()</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
+    @if (_isLoading)
+    {
+        <p>Loading watchlist...</p>
+    }
+    else
+    {
+        <div class="card dashboard-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="card-title mb-0">Market Overview</h4>
+                    <small class="text-muted">
+                        Auto-refresh every @RefreshSeconds seconds
+                    </small>
+                </div>
+                @if (_lastUpdated.HasValue)
+                {
+                    <small class="text-muted">
+                        Last updated: @GetHumanizedUpdateTime()
+                    </small>
+                    <small class="last-updated">@GetHumanizedUpdateTime()</small>
+                }
+            </div>
+
+            <div class="card-body">
+                @if (_entries.Count == 0)
+                {
+                    <p class="text-muted">No data available.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle dashboard-table">
+                            <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Name</th>
+                                <th class="text-end">Price (USD)</th>
+                                <th class="text-end">24h Change %</th>
+                                <th class="text-end">Last Updated</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var e in _entries)
+                            {
+                                var positive = e.Quote.Change24HPercent >= 0;
+                                <tr>
+                                    <td class="symbol-cell">
+                                        <span class="symbol-badge symbol-badge-outline">
+                                            @e.Coin.Symbol.ToUpperInvariant()
+                                        </span>
+                                    </td>
+                                    <td>@e.Coin.Name</td>
+                                    <td class="text-end">@e.Quote.Price</td>
+                                    <td class="text-end">
+                                        <span class="change-pill @(positive ? "change-up" : "change-down")">
+                                            @e.Quote.Change24HPercent.ToString("0.##")%
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        @e.Quote.Timestamp.LocalDateTime.ToLongTimeString()
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
 
 @code {
+    private const int RefreshSeconds = 10;
+
     private readonly List<WatchEntry> _entries = new();
     private bool _isLoading;
     private PeriodicTimer? _timer;
     private CancellationTokenSource? _cts;
+    private DateTimeOffset? _lastUpdated;
 
     protected override async Task OnInitializedAsync()
     {
         _cts = new CancellationTokenSource();
         await LoadOnceAsync(_cts.Token);
 
-        // μικρό auto refresh κάθε 10 δευτερόλεπτα
-        _timer = new PeriodicTimer(TimeSpan.FromSeconds(10));
-
+        _timer = new PeriodicTimer(TimeSpan.FromSeconds(RefreshSeconds));
         _ = RefreshLoopAsync(_cts.Token);
     }
 
@@ -77,6 +113,8 @@ else
                 var quote = await Crypto.Market.GetPriceAsync(coin.Symbol, "usd", ct);
                 _entries.Add(new WatchEntry(coin, quote));
             }
+
+            _lastUpdated = DateTimeOffset.UtcNow;
         }
         finally
         {
@@ -112,4 +150,28 @@ else
     }
 
     private record WatchEntry(CoinInfo Coin, PriceQuote Quote);
+    
+    private string GetHumanizedUpdateTime()
+    {
+        if (_lastUpdated is null)
+            return "Never updated";
+
+        var dt = _lastUpdated.Value.LocalDateTime;
+        var diff = DateTime.Now - dt;
+
+        if (diff.TotalSeconds < 10)
+            return "Updated just now";
+
+        if (diff.TotalSeconds < 60)
+            return $"Updated {diff.Seconds} seconds ago";
+
+        if (diff.TotalMinutes < 60)
+            return $"Updated {diff.Minutes} minutes ago";
+
+        if (diff.TotalHours < 24)
+            return $"Updated at {dt:HH:mm}";
+
+        return $"Updated on {dt:dd MMM yyyy, HH:mm}";
+    }
+
 }

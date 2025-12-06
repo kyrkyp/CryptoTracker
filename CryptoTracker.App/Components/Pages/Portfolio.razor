@@ -1,79 +1,153 @@
 ﻿@page "/portfolio"
 
 @using CryptoTracker.sdk
-@using CryptoTracker.sdk
-@using CryptoTracker.sdk.Models
 @using CryptoTracker.sdk.Models
 @inject CryptoTrackerClient Crypto
 
 <PageTitle>Portfolio</PageTitle>
 
-<h3>My Crypto Portfolio</h3>
+<div class="page-container container-fluid">
+    <h2 class="page-title">My Crypto Portfolio</h2>
 
-@if (_isLoading)
-{
-    <p>Loading portfolio...</p>
-}
-else if (_snapshot is null || !_snapshot.Positions.Any())
-{
-    <p>No holdings yet. Add some below.</p>
-}
-else
-{
-    <div class="summary">
-        <p><strong>Total Current Value:</strong> @_snapshot.TotalCurrentValue:C</p>
-        <p><strong>Total Invested:</strong> @_snapshot.TotalInvested:C</p>
-        <p><strong>Total PnL:</strong> @_snapshot.TotalPnL:C (@_snapshot.TotalPnLPercent.ToString("0.##")%)</p>
-    </div>
+    @if (_isLoading)
+    {
+        <p>Loading portfolio...</p>
+    }
+    else
+    {
+        <div class="row g-4">
+            <!-- Portfolio summary + table -->
+            <div class="col-12 col-xl-8">
+                <div class="card dashboard-card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="card-title mb-0">Overview</h4>
+                            <small class="text-muted">Full breakdown of your holdings</small>
+                        </div>
+                    </div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Symbol</th>
-            <th>Amount</th>
-            <th>Avg Buy Price</th>
-            <th>Current Price</th>
-            <th>Current Value</th>
-            <th>PnL</th>
-            <th>PnL %</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var pos in _snapshot.Positions)
-        {
-            <tr>
-                <td>@pos.Holding.Symbol.ToUpperInvariant()</td>
-                <td>@pos.Holding.Amount</td>
-                <td>@pos.Holding.AvgBuyPrice</td>
-                <td>@pos.CurrentPrice</td>
-                <td>@pos.CurrentValue</td>
-                <td>@pos.PnL</td>
-                <td>@pos.PnLPercent.ToString("0.##")%</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
+                    <div class="card-body">
+                        @if (_snapshot is null || !_snapshot.Positions.Any())
+                        {
+                            <p class="text-muted">No holdings yet. Use the form below to add your first position.</p>
+                        }
+                        else
+                        {
+                            <div class="row mb-4 dashboard-stats">
+                                <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                    <div class="stat-card">
+                                        <div class="stat-label">Total Value</div>
+                                        <div class="stat-value">
+                                            @_snapshot.TotalCurrentValue:C
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                    <div class="stat-card">
+                                        <div class="stat-label">Total Invested</div>
+                                        <div class="stat-value text-muted">
+                                            @_snapshot.TotalInvested:C
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="stat-card">
+                                        <div class="stat-label">Total PnL</div>
+                                        <div class="@GetPnlClass(_snapshot.TotalPnL)">
+                                            @_snapshot.TotalPnL:C
+                                            <span class="stat-pct">
+                                                (@_snapshot.TotalPnLPercent.ToString("0.##")%)
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-<hr />
+                            <h6 class="section-title">All Positions</h6>
 
-<h4>Add / Update Holding</h4>
+                            <div class="table-responsive">
+                                <table class="table table-sm align-middle dashboard-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Amount</th>
+                                        <th>Avg Buy</th>
+                                        <th>Current Price</th>
+                                        <th>Current Value</th>
+                                        <th>PnL</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach (var pos in _snapshot.Positions
+                                        .OrderByDescending(p => p.CurrentValue))
+                                    {
+                                        <tr>
+                                            <td class="symbol-cell">
+                                                <span class="symbol-badge">
+                                                    @pos.Holding.Symbol.ToUpperInvariant()
+                                                </span>
+                                            </td>
+                                            <td>@pos.Holding.Amount</td>
+                                            <td>@pos.Holding.AvgBuyPrice</td>
+                                            <td>@pos.CurrentPrice</td>
+                                            <td>@pos.CurrentValue:C</td>
+                                            <td class="@GetPnlClass(pos.PnL)">
+                                                @pos.PnL:C
+                                                <span class="stat-pct">
+                                                    (@pos.PnLPercent.ToString("0.##")%)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
 
-<div class="form">
-    <div>
-        <label>Symbol:</label>
-        <input @bind="_symbol" />
-    </div>
-    <div>
-        <label>Amount:</label>
-        <input type="number" step="0.0001" @bind="_amount" />
-    </div>
-    <div>
-        <label>Buy Price:</label>
-        <input type="number" step="0.01" @bind="_buyPrice" />
-    </div>
+            <!-- Add / Update form -->
+            <div class="col-12 col-xl-4">
+                <div class="card dashboard-card form-card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">Add / Update Holding</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-grid">
+                            <div class="mb-3">
+                                <label class="form-label">Symbol</label>
+                                <input class="form-control"
+                                       placeholder="e.g. btc"
+                                       @bind="_symbol" />
+                            </div>
 
-    <button @onclick="OnAddOrUpdate">Save Holding</button>
+                            <div class="mb-3">
+                                <label class="form-label">Amount</label>
+                                <input class="form-control"
+                                       type="number"
+                                       step="0.0001"
+                                       @bind="_amount" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Buy Price</label>
+                                <input class="form-control"
+                                       type="number"
+                                       step="0.01"
+                                       @bind="_buyPrice" />
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary w-100 mt-2"
+                                @onclick="OnAddOrUpdate">
+                            Save Holding
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
@@ -110,4 +184,12 @@ else
         await Crypto.Portfolio.AddOrUpdateHoldingAsync(_symbol.Trim(), _amount, _buyPrice);
         await LoadSnapshotAsync();
     }
+
+    private static string GetPnlClass(decimal pnl) =>
+        pnl switch
+        {
+            > 0 => "pnl-positive",
+            < 0 => "pnl-negative",
+            _ => "pnl-neutral"
+        };
 }

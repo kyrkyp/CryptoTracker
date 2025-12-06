@@ -29,7 +29,7 @@
     <AppXManifest Include="C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2025-12-06T07:32:20.701</Modified>
+      <Modified>2025-12-06T10:21:25.402</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -43,11 +43,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\CryptoTracker.App.dll">
       <PackagePath>CryptoTracker.App.dll</PackagePath>
-      <Modified>2025-12-06T07:32:17.939</Modified>
+      <Modified>2025-12-06T10:21:24.362</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\apphost.exe">
       <PackagePath>CryptoTracker.App.exe</PackagePath>
-      <Modified>2025-12-06T07:32:18.054</Modified>
+      <Modified>2025-12-06T10:21:24.373</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\Resources\Raw\AboutAssets.txt">
       <PackagePath>AboutAssets.txt</PackagePath>
@@ -55,7 +55,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\wwwroot\css\app.css">
       <PackagePath>wwwroot\css\app.css</PackagePath>
-      <Modified>2025-12-06T01:33:33.228</Modified>
+      <Modified>2025-12-06T10:20:44.841</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\wwwroot\css\bootstrap\bootstrap.min.css">
       <PackagePath>wwwroot\css\bootstrap\bootstrap.min.css</PackagePath>
@@ -659,7 +659,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\bin\Debug\net8.0\CryptoTracker.sdk.dll">
       <PackagePath>CryptoTracker.sdk.dll</PackagePath>
-      <Modified>2025-12-06T07:27:53.859</Modified>
+      <Modified>2025-12-06T10:07:14.582</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\nanas\.nuget\packages\microsoft.maui.controls.compatibility\8.0.100\lib\net8.0-windows10.0.19041\Microsoft.Maui.Controls.Compatibility.pri">
       <PackagePath>Microsoft.Maui.Controls.Compatibility.pri</PackagePath>
