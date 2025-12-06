@@ -342,5 +342,32 @@ h1:focus {
     }
 }
 
+/* ----- Sparklines ----- */
+
+.sparkline-cell {
+    min-width: 110px;
+}
+
+.sparkline {
+    width: 100px;
+    height: 24px;
+    display: inline-block;
+}
+
+.sparkline-up polyline {
+    stroke: #16a34a;
+    stroke-width: 1.6;
+}
+
+.sparkline-down polyline {
+    stroke: #dc2626;
+    stroke-width: 1.6;
+}
+
+.sparkline polyline {
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    opacity: 0.9;
+}
 
 

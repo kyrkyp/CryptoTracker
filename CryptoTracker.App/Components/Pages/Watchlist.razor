@@ -53,7 +53,8 @@
                                 <th>Symbol</th>
                                 <th>Name</th>
                                 <th class="text-end">Price (USD)</th>
-                                <th class="text-end">24h Change %</th>
+                                <th class="text-end">Trend</th>
+                                <th class="text-end">24h %</th>
                                 <th class="text-end">Last Updated</th>
                                 <th class="text-end">Action</th>
                             </tr>
@@ -77,14 +78,25 @@
                                         </span>
                                     </td>
 
+                                    <td class="text-end sparkline-cell">
+                                        <svg viewBox="0 0 100 24"
+                                             preserveAspectRatio="none"
+                                             class="sparkline @(positive ? "sparkline-up" : "sparkline-down")">
+                                            <polyline fill="none"
+                                                      points="@GetSparklinePoints(e)" />
+                                        </svg>
+                                    </td>
+
                                     <td class="text-end">
                                         <span class="change-pill @(positive ? "change-up" : "change-down")">
                                             @e.Quote.Change24HPercent.ToString("0.##")%
                                         </span>
                                     </td>
+
                                     <td class="text-end">
                                         @e.Quote.Timestamp.LocalDateTime.ToLongTimeString()
                                     </td>
+
                                     <td class="text-end">
                                         @if (isEditing)
                                         {
@@ -150,6 +162,10 @@
 
     private readonly Dictionary<string, PriceChangeDirection> _priceDirections =
         new(StringComparer.OrdinalIgnoreCase);
+    
+    private readonly Dictionary<string, List<decimal>> _priceHistory =
+        new(StringComparer.OrdinalIgnoreCase);
+
 
     private enum PriceChangeDirection
     {
@@ -179,7 +195,8 @@
             foreach (var coin in coins)
             {
                 var quote = await Crypto.Market.GetPriceAsync(coin.Symbol, "usd", ct);
-                
+
+                // ---- price direction (αν το έχεις ήδη, κράτα το ίδιο) ----
                 var direction = PriceChangeDirection.None;
 
                 if (_lastPrices.TryGetValue(coin.Symbol, out var lastPrice))
@@ -195,6 +212,22 @@
                 _entries.Add(new WatchEntry(coin, quote));
                 _priceDirections[coin.Symbol] = direction;
                 _lastPrices[coin.Symbol] = quote.Price;
+
+                // ---- price history για sparkline ----
+                if (!_priceHistory.TryGetValue(coin.Symbol, out var history))
+                {
+                    history = new List<decimal>();
+                    _priceHistory[coin.Symbol] = history;
+                }
+
+                history.Add(quote.Price);
+
+                // κρατάμε μόνο τα τελευταία 20 σημεία ανά coin
+                const int maxPoints = 20;
+                if (history.Count > maxPoints)
+                {
+                    history.RemoveRange(0, history.Count - maxPoints);
+                }
             }
 
             _lastUpdated = DateTimeOffset.UtcNow;
@@ -204,6 +237,44 @@
             _isLoading = false;
             await InvokeAsync(StateHasChanged);
         }
+    }
+
+    private string GetSparklinePoints(WatchEntry entry)
+    {
+        if (!_priceHistory.TryGetValue(entry.Coin.Symbol, out var history) ||
+            history.Count < 2)
+        {
+            return string.Empty;
+        }
+
+        var values = history.ToArray();
+        var min = values.Min();
+        var max = values.Max();
+        var range = max - min;
+
+        // προστασία από division by zero → flat line
+        if (range == 0)
+            range = 1;
+
+        var n = values.Length;
+        var sb = new System.Text.StringBuilder();
+
+        for (var i = 0; i < n; i++)
+        {
+            // x: 0 → 100
+            var x = (double)i / (n - 1) * 100.0;
+
+            // y: 0 → 24 (SVG height), inverted (0 = top)
+            var normalized = (double)(values[i] - min) / (double)range;
+            var y = 24.0 - normalized * 24.0;
+
+            sb.Append(x.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture));
+            sb.Append(',');
+            sb.Append(y.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture));
+            sb.Append(' ');
+        }
+
+        return sb.ToString().TrimEnd();
     }
 
 
