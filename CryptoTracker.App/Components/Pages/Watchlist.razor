@@ -26,14 +26,20 @@
                 </div>
                 @if (_lastUpdated.HasValue)
                 {
-                    <small class="text-muted">
-                        Last updated: @GetHumanizedUpdateTime()
+                    <small class="last-updated">
+                        @GetHumanizedUpdateTime()
                     </small>
-                    <small class="last-updated">@GetHumanizedUpdateTime()</small>
                 }
             </div>
 
             <div class="card-body">
+                @if (!string.IsNullOrWhiteSpace(_inlineMessage))
+                {
+                    <div class="alert alert-success py-2 mb-3">
+                        @_inlineMessage
+                    </div>
+                }
+
                 @if (_entries.Count == 0)
                 {
                     <p class="text-muted">No data available.</p>
@@ -49,12 +55,15 @@
                                 <th class="text-end">Price (USD)</th>
                                 <th class="text-end">24h Change %</th>
                                 <th class="text-end">Last Updated</th>
+                                <th class="text-end">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach (var e in _entries)
                             {
                                 var positive = e.Quote.Change24HPercent >= 0;
+                                var isEditing = string.Equals(_editingSymbol, e.Coin.Symbol, StringComparison.OrdinalIgnoreCase);
+
                                 <tr>
                                     <td class="symbol-cell">
                                         <span class="symbol-badge symbol-badge-outline">
@@ -70,6 +79,40 @@
                                     </td>
                                     <td class="text-end">
                                         @e.Quote.Timestamp.LocalDateTime.ToLongTimeString()
+                                    </td>
+                                    <td class="text-end">
+                                        @if (isEditing)
+                                        {
+                                            <div class="add-inline">
+                                                <input class="form-control form-control-sm add-inline-input"
+                                                       type="number"
+                                                       step="0.0001"
+                                                       placeholder="Amount"
+                                                       @bind="_editAmount" />
+
+                                                <input class="form-control form-control-sm add-inline-input"
+                                                       type="number"
+                                                       step="0.01"
+                                                       placeholder="Buy price"
+                                                       @bind="_editBuyPrice" />
+
+                                                <button class="btn btn-primary btn-xs"
+                                                        @onclick="() => ConfirmAddToPortfolioAsync(e.Coin.Symbol)">
+                                                    Add
+                                                </button>
+                                                <button class="btn btn-link btn-xs text-muted"
+                                                        @onclick="CancelAddToPortfolio">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-primary btn-sm"
+                                                    @onclick="() => StartAddToPortfolio(e)">
+                                                Add to portfolio
+                                            </button>
+                                        }
                                     </td>
                                 </tr>
                             }
@@ -90,6 +133,12 @@
     private PeriodicTimer? _timer;
     private CancellationTokenSource? _cts;
     private DateTimeOffset? _lastUpdated;
+
+    // inline add-to-portfolio state
+    private string? _editingSymbol;
+    private decimal _editAmount;
+    private decimal _editBuyPrice;
+    private string? _inlineMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -140,17 +189,41 @@
         }
     }
 
-    public ValueTask DisposeAsync()
-    {
-        _cts?.Cancel();
-        _cts?.Dispose();
-        _timer?.Dispose();
+    // ---------- Add to portfolio logic ----------
 
-        return ValueTask.CompletedTask;
+    private void StartAddToPortfolio(WatchEntry entry)
+    {
+        _editingSymbol = entry.Coin.Symbol;
+        _editAmount = 0.01m;
+        _editBuyPrice = entry.Quote.Price;
+        _inlineMessage = null;
     }
 
-    private record WatchEntry(CoinInfo Coin, PriceQuote Quote);
-    
+    private void CancelAddToPortfolio()
+    {
+        _editingSymbol = null;
+        _inlineMessage = null;
+    }
+
+    private async Task ConfirmAddToPortfolioAsync(string symbol)
+    {
+        if (_editAmount <= 0 || _editBuyPrice <= 0)
+        {
+            _inlineMessage = "Please enter valid amount and price.";
+            return;
+        }
+
+        await Crypto.Portfolio.AddOrUpdateHoldingAsync(
+            symbol.Trim(),
+            _editAmount,
+            _editBuyPrice);
+
+        _inlineMessage = $"Added {symbol.ToUpperInvariant()} to your portfolio.";
+        _editingSymbol = null;
+    }
+
+    // ---------- Last updated human-friendly text ----------
+
     private string GetHumanizedUpdateTime()
     {
         if (_lastUpdated is null)
@@ -174,4 +247,14 @@
         return $"Updated on {dt:dd MMM yyyy, HH:mm}";
     }
 
+    public ValueTask DisposeAsync()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _timer?.Dispose();
+
+        return ValueTask.CompletedTask;
+    }
+
+    private record WatchEntry(CoinInfo Coin, PriceQuote Quote);
 }
