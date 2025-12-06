@@ -1,0 +1,115 @@
+﻿@page "/Watchlist"
+
+@using CryptoTracker.sdk
+@using CryptoTracker.sdk.Models
+@inject CryptoTrackerClient Crypto
+@implements  IAsyncDisposable
+
+<PageTitle>Watchlist</PageTitle>
+
+<h3>Crypto Watchlist</h3>
+
+@if (_isLoading)
+{
+    <p>Loading prices...</p>
+}
+else if (_entries.Count == 0)
+{
+    <p>No data available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Name</th>
+            <th>Price (USD)</th>
+            <th>24h Change %</th>
+            <th>Last Updated</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var e in _entries)
+        {
+            var positive = e.Quote.Change24HPercent >= 0;
+            <tr>
+                <td>@e.Coin.Symbol.ToUpperInvariant()</td>
+                <td>@e.Coin.Name</td>
+                <td>@e.Quote.Price</td>
+                <td style="color:@(positive ? "green" : "red")">
+                    @e.Quote.Change24HPercent.ToString("0.##")%
+                </td>
+                <td>@e.Quote.Timestamp.LocalDateTime.ToLongTimeString()</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private readonly List<WatchEntry> _entries = new();
+    private bool _isLoading;
+    private PeriodicTimer? _timer;
+    private CancellationTokenSource? _cts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cts = new CancellationTokenSource();
+        await LoadOnceAsync(_cts.Token);
+
+        // μικρό auto refresh κάθε 10 δευτερόλεπτα
+        _timer = new PeriodicTimer(TimeSpan.FromSeconds(10));
+
+        _ = RefreshLoopAsync(_cts.Token);
+    }
+
+    private async Task LoadOnceAsync(CancellationToken ct)
+    {
+        _isLoading = true;
+        try
+        {
+            _entries.Clear();
+
+            var coins = await Crypto.Market.GetTopCoinsAsync(10, ct);
+            foreach (var coin in coins)
+            {
+                var quote = await Crypto.Market.GetPriceAsync(coin.Symbol, "usd", ct);
+                _entries.Add(new WatchEntry(coin, quote));
+            }
+        }
+        finally
+        {
+            _isLoading = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task RefreshLoopAsync(CancellationToken ct)
+    {
+        if (_timer is null) return;
+
+        try
+        {
+            while (await _timer.WaitForNextTickAsync(ct))
+            {
+                await LoadOnceAsync(ct);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // ignore
+        }
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _timer?.Dispose();
+
+        return ValueTask.CompletedTask;
+    }
+
+    private record WatchEntry(CoinInfo Coin, PriceQuote Quote);
+}

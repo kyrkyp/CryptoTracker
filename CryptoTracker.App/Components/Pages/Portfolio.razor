@@ -1,0 +1,113 @@
+﻿@page "/portfolio"
+
+@using CryptoTracker.sdk
+@using CryptoTracker.sdk
+@using CryptoTracker.sdk.Models
+@using CryptoTracker.sdk.Models
+@inject CryptoTrackerClient Crypto
+
+<PageTitle>Portfolio</PageTitle>
+
+<h3>My Crypto Portfolio</h3>
+
+@if (_isLoading)
+{
+    <p>Loading portfolio...</p>
+}
+else if (_snapshot is null || !_snapshot.Positions.Any())
+{
+    <p>No holdings yet. Add some below.</p>
+}
+else
+{
+    <div class="summary">
+        <p><strong>Total Current Value:</strong> @_snapshot.TotalCurrentValue:C</p>
+        <p><strong>Total Invested:</strong> @_snapshot.TotalInvested:C</p>
+        <p><strong>Total PnL:</strong> @_snapshot.TotalPnL:C (@_snapshot.TotalPnLPercent.ToString("0.##")%)</p>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Amount</th>
+            <th>Avg Buy Price</th>
+            <th>Current Price</th>
+            <th>Current Value</th>
+            <th>PnL</th>
+            <th>PnL %</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var pos in _snapshot.Positions)
+        {
+            <tr>
+                <td>@pos.Holding.Symbol.ToUpperInvariant()</td>
+                <td>@pos.Holding.Amount</td>
+                <td>@pos.Holding.AvgBuyPrice</td>
+                <td>@pos.CurrentPrice</td>
+                <td>@pos.CurrentValue</td>
+                <td>@pos.PnL</td>
+                <td>@pos.PnLPercent.ToString("0.##")%</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<hr />
+
+<h4>Add / Update Holding</h4>
+
+<div class="form">
+    <div>
+        <label>Symbol:</label>
+        <input @bind="_symbol" />
+    </div>
+    <div>
+        <label>Amount:</label>
+        <input type="number" step="0.0001" @bind="_amount" />
+    </div>
+    <div>
+        <label>Buy Price:</label>
+        <input type="number" step="0.01" @bind="_buyPrice" />
+    </div>
+
+    <button @onclick="OnAddOrUpdate">Save Holding</button>
+</div>
+
+@code {
+    private PortfolioSnapshot? _snapshot;
+    private bool _isLoading;
+
+    private string _symbol = "btc";
+    private decimal _amount = 0.01m;
+    private decimal _buyPrice = 60000m;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSnapshotAsync();
+    }
+
+    private async Task LoadSnapshotAsync()
+    {
+        _isLoading = true;
+        try
+        {
+            _snapshot = await Crypto.Portfolio.GetSnapshotAsync();
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task OnAddOrUpdate()
+    {
+        if (string.IsNullOrWhiteSpace(_symbol) || _amount <= 0 || _buyPrice <= 0)
+            return;
+
+        await Crypto.Portfolio.AddOrUpdateHoldingAsync(_symbol.Trim(), _amount, _buyPrice);
+        await LoadSnapshotAsync();
+    }
+}

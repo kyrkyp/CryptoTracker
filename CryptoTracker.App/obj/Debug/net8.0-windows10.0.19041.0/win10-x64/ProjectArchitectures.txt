@@ -1,0 +1,1 @@
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\CryptoTracker.App.csproj;x64

@@ -1,0 +1,11 @@
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\bin\Debug\net8.0\CryptoTracker.sdk.deps.json
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\bin\Debug\net8.0\CryptoTracker.sdk.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\bin\Debug\net8.0\CryptoTracker.sdk.pdb
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\obj\Debug\net8.0\CryptoTracker.sdk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\obj\Debug\net8.0\CryptoTracker.sdk.AssemblyInfoInputs.cache
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\obj\Debug\net8.0\CryptoTracker.sdk.AssemblyInfo.cs
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\obj\Debug\net8.0\CryptoTracker.sdk.csproj.CoreCompileInputs.cache
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\obj\Debug\net8.0\CryptoTracker.sdk.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\obj\Debug\net8.0\refint\CryptoTracker.sdk.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\obj\Debug\net8.0\CryptoTracker.sdk.pdb
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.sdk\obj\Debug\net8.0\ref\CryptoTracker.sdk.dll

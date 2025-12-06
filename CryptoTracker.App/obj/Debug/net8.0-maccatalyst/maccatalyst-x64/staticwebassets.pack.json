@@ -1,0 +1,45 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\nanas\\Desktop\\.Net Projects\\CryptoTracker\\CryptoTracker.App\\obj\\Debug\\net8.0-maccatalyst\\maccatalyst-x64\\scopedcss\\bundle\\CryptoTracker.App.styles.css",
+      "PackagePath": "staticwebassets\\CryptoTracker.App.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\nanas\\Desktop\\.Net Projects\\CryptoTracker\\CryptoTracker.App\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\nanas\\Desktop\\.Net Projects\\CryptoTracker\\CryptoTracker.App\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\nanas\\Desktop\\.Net Projects\\CryptoTracker\\CryptoTracker.App\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\nanas\\Desktop\\.Net Projects\\CryptoTracker\\CryptoTracker.App\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\nanas\\Desktop\\.Net Projects\\CryptoTracker\\CryptoTracker.App\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.CryptoTracker.App.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.build.CryptoTracker.App.props",
+      "PackagePath": "build\\CryptoTracker.App.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.buildMultiTargeting.CryptoTracker.App.props",
+      "PackagePath": "buildMultiTargeting\\CryptoTracker.App.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0-maccatalyst\\maccatalyst-x64\\staticwebassets\\msbuild.buildTransitive.CryptoTracker.App.props",
+      "PackagePath": "buildTransitive\\CryptoTracker.App.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
