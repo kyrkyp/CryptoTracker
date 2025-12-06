@@ -6,120 +6,173 @@
 
 <PageTitle>Dashboard</PageTitle>
 
-<h2 class="mb-4">Dashboard</h2>
+<div class="dashboard-container container-fluid">
+    <h2 class="dashboard-title">Dashboard</h2>
 
-@if (_isLoading)
-{
-    <p>Loading dashboard...</p>
-}
-else
-{
-    <div class="row">
-        <!-- Portfolio summary -->
-        <div class="col-12 col-lg-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title">Portfolio Summary</h4>
-
-                    @if (_portfolio is null || !_portfolio.Positions.Any())
-                    {
-                        <p class="text-muted mt-3">No holdings yet. Go to <strong>Portfolio</strong> to add your first position.</p>
-                    }
-                    else
-                    {
-                        <div class="mb-3">
-                            <p><strong>Total Current Value:</strong> @_portfolio.TotalCurrentValue:C</p>
-                            <p><strong>Total Invested:</strong> @_portfolio.TotalInvested:C</p>
-
-                            <p>
-                                <strong>Total PnL:</strong>
-                                <span class="@GetPnlClass(_portfolio.TotalPnL)">
-                                    @_portfolio.TotalPnL:C (@_portfolio.TotalPnLPercent.ToString("0.##")%)
-                                </span>
-                            </p>
+    @if (_isLoading)
+    {
+        <p>Loading dashboard...</p>
+    }
+    else
+    {
+        <div class="row g-4">
+            <!-- Portfolio summary -->
+            <div class="col-12 col-lg-7">
+                <div class="card dashboard-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="card-title mb-0">Portfolio Summary</h4>
+                            <small class="text-muted">Overview of your current positions</small>
                         </div>
+                        <span class="badge dashboard-badge">
+                            Total PnL
+                        </span>
+                    </div>
 
-                        <h6>Top Positions</h6>
-                        <table class="table table-sm align-middle">
-                            <thead>
-                            <tr>
-                                <th>Symbol</th>
-                                <th>Amount</th>
-                                <th>Current Value</th>
-                                <th>PnL</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach (var pos in _portfolio.Positions
-                                .OrderByDescending(p => p.CurrentValue)
-                                .Take(5))
-                            {
-                                <tr>
-                                    <td>@pos.Holding.Symbol.ToUpperInvariant()</td>
-                                    <td>@pos.Holding.Amount</td>
-                                    <td>@pos.CurrentValue:C</td>
-                                    <td class="@GetPnlClass(pos.PnL)">
-                                        @pos.PnL:C (@pos.PnLPercent.ToString("0.##")%)
-                                    </td>
-                                </tr>
-                            }
-                            </tbody>
-                        </table>
+                    <div class="card-body">
+                        @if (_portfolio is null || !_portfolio.Positions.Any())
+                        {
+                            <p class="text-muted mt-3">
+                                You don't have any holdings yet. Go to
+                                <strong>Portfolio</strong> to add your first position.
+                            </p>
+                        }
+                        else
+                        {
+                            <div class="row mb-4 dashboard-stats">
+                                <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                    <div class="stat-card">
+                                        <div class="stat-label">Total Value</div>
+                                        <div class="stat-value">
+                                            @_portfolio.TotalCurrentValue:C
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                    <div class="stat-card">
+                                        <div class="stat-label">Total Invested</div>
+                                        <div class="stat-value text-muted">
+                                            @_portfolio.TotalInvested:C
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="stat-card">
+                                        <div class="stat-label">Total PnL</div>
+                                        <div class="@GetPnlClass(_portfolio.TotalPnL)">
+                                            @_portfolio.TotalPnL:C
+                                            <span class="stat-pct">
+                                                (@_portfolio.TotalPnLPercent.ToString("0.##")%)
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <a href="portfolio" class="btn btn-primary btn-sm mt-2">
-                            View full portfolio
-                        </a>
-                    }
+                            <h6 class="section-title">Top Positions</h6>
+                            <div class="table-responsive">
+                                <table class="table table-sm align-middle dashboard-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Amount</th>
+                                        <th>Current Value</th>
+                                        <th>PnL</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach (var pos in _portfolio.Positions
+                                        .OrderByDescending(p => p.CurrentValue)
+                                        .Take(5))
+                                    {
+                                        <tr>
+                                            <td class="symbol-cell">
+                                                <span class="symbol-badge">
+                                                    @pos.Holding.Symbol.ToUpperInvariant()
+                                                </span>
+                                            </td>
+                                            <td>@pos.Holding.Amount</td>
+                                            <td>@pos.CurrentValue:C</td>
+                                            <td class="@GetPnlClass(pos.PnL)">
+                                                @pos.PnL:C
+                                                <span class="stat-pct">
+                                                    (@pos.PnLPercent.ToString("0.##")%)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <a href="portfolio" class="btn btn-primary btn-sm mt-2">
+                                View full portfolio
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Watchlist preview -->
+            <div class="col-12 col-lg-5">
+                <div class="card dashboard-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="card-title mb-0">Watchlist Preview</h4>
+                            <small class="text-muted">Top market movers</small>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        @if (_watchlist.Count == 0)
+                        {
+                            <p class="text-muted mt-3">No watchlist data available.</p>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-sm align-middle dashboard-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Symbol</th>
+                                        <th>Name</th>
+                                        <th class="text-end">Price</th>
+                                        <th class="text-end">24h %</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach (var item in _watchlist)
+                                    {
+                                        var positive = item.Quote.Change24HPercent >= 0;
+                                        <tr>
+                                            <td class="symbol-cell">
+                                                <span class="symbol-badge symbol-badge-outline">
+                                                    @item.Coin.Symbol.ToUpperInvariant()
+                                                </span>
+                                            </td>
+                                            <td>@item.Coin.Name</td>
+                                            <td class="text-end">@item.Quote.Price</td>
+                                            <td class="text-end">
+                                                <span class="change-pill @(positive ? "change-up" : "change-down")">
+                                                    @item.Quote.Change24HPercent.ToString("0.##")%
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <a href="watchlist" class="btn btn-outline-secondary btn-sm mt-2">
+                                Open full watchlist
+                            </a>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Watchlist preview -->
-        <div class="col-12 col-lg-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title">Watchlist Preview</h4>
-
-                    @if (_watchlist.Count == 0)
-                    {
-                        <p class="text-muted mt-3">No watchlist data available.</p>
-                    }
-                    else
-                    {
-                        <table class="table table-sm align-middle">
-                            <thead>
-                            <tr>
-                                <th>Symbol</th>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>24h %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach (var item in _watchlist)
-                            {
-                                var positive = item.Quote.Change24HPercent >= 0;
-                                <tr>
-                                    <td>@item.Coin.Symbol.ToUpperInvariant()</td>
-                                    <td>@item.Coin.Name</td>
-                                    <td>@item.Quote.Price</td>
-                                    <td class="@(positive ? "text-success" : "text-danger")">
-                                        @item.Quote.Change24HPercent.ToString("0.##")%
-                                    </td>
-                                </tr>
-                            }
-                            </tbody>
-                        </table>
-
-                        <a href="watchlist" class="btn btn-outline-secondary btn-sm mt-2">
-                            Open full watchlist
-                        </a>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-}
+    }
+</div>
 
 @code {
     private bool _isLoading;
@@ -132,10 +185,8 @@ else
 
         try
         {
-            // Φόρτωση portfolio
             var portfolioTask = Crypto.Portfolio.GetSnapshotAsync();
 
-            // Φόρτωση top 5 coins για preview
             var coins = await Crypto.Market.GetTopCoinsAsync(5);
             _watchlist.Clear();
 
@@ -156,9 +207,9 @@ else
     private static string GetPnlClass(decimal pnl) =>
         pnl switch
         {
-            > 0 => "text-success",
-            < 0 => "text-danger",
-            _ => "text-muted"
+            > 0 => "pnl-positive",
+            < 0 => "pnl-negative",
+            _ => "pnl-neutral"
         };
 
     private record WatchEntry(CoinInfo Coin, PriceQuote Quote);

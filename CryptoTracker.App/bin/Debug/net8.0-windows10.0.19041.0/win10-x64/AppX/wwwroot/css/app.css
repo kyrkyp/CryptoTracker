@@ -84,3 +84,204 @@ h1:focus {
         padding-left: env(safe-area-inset-left);
     }
 }
+
+/* ----- Dashboard layout ----- */
+
+.dashboard-container {
+    padding: 2rem 2.5rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1.5rem 1.25rem;
+    }
+}
+
+.dashboard-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* ----- Cards ----- */
+
+.dashboard-card {
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+    overflow: hidden;
+}
+
+.dashboard-card .card-header {
+    background: radial-gradient(circle at top left, #1e40af 0, #0f172a 45%, #020617 100%);
+    color: #e5e7eb;
+    border-bottom: none;
+}
+
+.dashboard-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.dashboard-badge {
+    background: rgba(15, 23, 42, 0.2);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* ----- Stats ----- */
+
+.dashboard-stats .stat-card {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f9fafb, #eef2ff);
+    border: 1px solid #e5e7eb;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.stat-pct {
+    font-size: 0.8rem;
+    margin-left: 0.25rem;
+    color: #6b7280;
+}
+
+/* ----- PnL colors ----- */
+
+.pnl-positive {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.pnl-negative {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.pnl-neutral {
+    color: #6b7280;
+}
+
+/* ----- Tables & badges ----- */
+
+.dashboard-table thead th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9ca3af;
+    border-bottom-color: #e5e7eb;
+}
+
+.dashboard-table tbody td {
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.symbol-cell {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.symbol-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #0f172a, #1d4ed8);
+    color: #e5e7eb;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.symbol-badge-outline {
+    background: transparent;
+    color: #1f2937;
+    border: 1px solid #d1d5db;
+}
+
+/* ----- Change pills ----- */
+
+.change-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 4.2rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.change-up {
+    background: rgba(22, 163, 74, 0.08);
+    color: #16a34a;
+}
+
+.change-down {
+    background: rgba(220, 38, 38, 0.08);
+    color: #dc2626;
+}
+
+/* ----- Generic page layout ----- */
+
+.page-container {
+    padding: 2rem 2.5rem;
+}
+
+@media (max-width: 768px) {
+    .page-container {
+        padding: 1.5rem 1.25rem;
+    }
+}
+
+.page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+/* ----- Form card / grid ----- */
+
+.form-card .card-body {
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem 1.25rem;
+}
+
+.form-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+}
+
+.last-updated {
+    font-size: 0.80rem;
+    font-weight: 500;
+    color: #64748b;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(148, 163, 184, 0.15);
+}
+
