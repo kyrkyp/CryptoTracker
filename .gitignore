@@ -1,0 +1,34 @@
+# Rider settings
+.idea/
+
+# Build artifacts
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.csproj.user
+
+# Maui generated
+Platforms/*/bin/
+Platforms/*/obj/
+
+# VS files
+.vscode/
+*.dbmdl
+
+# Logs
+*.log
+
+# Cache
+.cache/
+*.tmp
+
+# JSON settings that are per-user
+appsettings.Development.json
+
+# Node (αν έχεις npm scripts στο Blazor)
+node_modules/
