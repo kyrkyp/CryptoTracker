@@ -1112,3 +1112,4 @@ C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\n
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-android\stamp\_GenerateJavaStubs.stamp
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-android\stamp\_GeneratePackageManagerJava.stamp
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-android\stamp\_ResolveLibraryProjectImports.stamp
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-android\CryptoTracker.App.sourcelink.json

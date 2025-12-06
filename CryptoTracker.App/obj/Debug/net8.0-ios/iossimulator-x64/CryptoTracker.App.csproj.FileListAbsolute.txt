@@ -342,3 +342,4 @@ C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\n
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-ios\iossimulator-x64\CryptoTracker.App.pdb
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-ios\iossimulator-x64\CryptoTracker.App.genruntimeconfig.cache
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-ios\iossimulator-x64\ref\CryptoTracker.App.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-ios\iossimulator-x64\CryptoTracker.App.sourcelink.json

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using CryptoTracker.App.Services;
 using CryptoTracker.sdk;
 using CryptoTracker.sdk.Clients.InMemory;
 using CryptoTracker.sdk.Interfaces;
@@ -21,6 +22,7 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
+        builder.Services.AddSingleton<IPortfolioStore, FilePortfolioStore>();
         
         // 🔹 SDK registrations
         builder.Services.AddSingleton<ICryptoMarketClient, FakeMarketClient>();
