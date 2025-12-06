@@ -302,4 +302,45 @@ h1:focus {
     background: rgba(148, 163, 184, 0.15);
 }
 
+/* ----- Animated price highlights ----- */
+
+.price-neutral {
+    color: #0f172a; /* default text */
+}
+
+.price-up-anim {
+    color: #16a34a;
+    font-weight: 600;
+    animation: flash-up 0.6s ease-out;
+}
+
+.price-down-anim {
+    color: #dc2626;
+    font-weight: 600;
+    animation: flash-down 0.6s ease-out;
+}
+
+@keyframes flash-up {
+    0% {
+        background-color: rgba(22, 163, 74, 0.30);
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.6);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+    }
+}
+
+@keyframes flash-down {
+    0% {
+        background-color: rgba(220, 38, 38, 0.30);
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+    }
+}
+
+
 
