@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CryptoTracker.sdk")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+622429185d25f5469f033c17a1923e12fca472fb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6e1373e01612f00b04e35010f32a8815d0b17fbf")]
 [assembly: System.Reflection.AssemblyProductAttribute("CryptoTracker.sdk")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CryptoTracker.sdk")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

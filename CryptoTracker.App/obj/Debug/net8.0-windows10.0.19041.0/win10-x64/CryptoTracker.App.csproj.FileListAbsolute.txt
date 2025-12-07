@@ -208,3 +208,8 @@ C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\n
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\MultipleQualifiersPerDimensionFound.txt
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\ProjectArchitectures.txt
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\CryptoTracker.App.sourcelink.json
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Diagnostics.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Http.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\System.Diagnostics.DiagnosticSource.dll

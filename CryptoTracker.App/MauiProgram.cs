@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using CryptoTracker.App.Services;
 using CryptoTracker.sdk;
+using CryptoTracker.Sdk.Clients.CoinGecko;
 using CryptoTracker.sdk.Clients.InMemory;
 using CryptoTracker.sdk.Interfaces;
 
@@ -22,10 +23,14 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
+        builder.Services.AddHttpClient<ICryptoMarketClient, CoinGeckoMarketClient>(client =>
+        {
+            client.BaseAddress = new Uri("https://api.coingecko.com/api/v3/");
+        });
+        
         builder.Services.AddSingleton<IPortfolioStore, FilePortfolioStore>();
         
         // 🔹 SDK registrations
-        builder.Services.AddSingleton<ICryptoMarketClient, FakeMarketClient>();
         builder.Services.AddSingleton<IPortfolioClient, InMemoryPortfolioClient>();
         builder.Services.AddSingleton<IAlertsClient, InMemoryAlertsClient>();
         builder.Services.AddSingleton<CryptoTrackerClient>();

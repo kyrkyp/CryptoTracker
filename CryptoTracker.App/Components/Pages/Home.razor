@@ -15,6 +15,13 @@
     }
     else
     {
+        @if (!string.IsNullOrEmpty(_error))
+        {
+            <div class="alert alert-danger">
+                <strong>Error loading dashboard:</strong>
+                <pre style="white-space:pre-wrap;font-size:0.8rem;">@_error</pre>
+            </div>
+        }
         <div class="row g-4">
             <!-- Portfolio summary -->
             <div class="col-12 col-lg-7">
@@ -178,10 +185,13 @@
     private bool _isLoading;
     private PortfolioSnapshot? _portfolio;
     private readonly List<WatchEntry> _watchlist = new();
+    private string? _error;
+
 
     protected override async Task OnInitializedAsync()
     {
         _isLoading = true;
+        _error = null;
 
         try
         {
@@ -198,11 +208,16 @@
 
             _portfolio = await portfolioTask;
         }
+        catch (Exception ex)
+        {
+            _error = ex.ToString();
+        }
         finally
         {
             _isLoading = false;
         }
     }
+
 
     private static string GetPnlClass(decimal pnl) =>
         pnl switch

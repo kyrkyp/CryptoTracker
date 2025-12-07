@@ -331,3 +331,7 @@ C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\n
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-maccatalyst\maccatalyst-x64\CryptoTracker.App.genruntimeconfig.cache
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-maccatalyst\maccatalyst-x64\ref\CryptoTracker.App.dll
 C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\obj\Debug\net8.0-maccatalyst\maccatalyst-x64\CryptoTracker.App.sourcelink.json
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Diagnostics.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Http.dll
+C:\Users\nanas\Desktop\.Net Projects\CryptoTracker\CryptoTracker.App\bin\Debug\net8.0-maccatalyst\maccatalyst-x64\Microsoft.Extensions.Options.ConfigurationExtensions.dll
